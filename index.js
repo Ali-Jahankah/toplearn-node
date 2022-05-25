@@ -12,10 +12,32 @@ em.emit("firstEvent", "ali");
 
 const server = http.createServer((req, res) => {
   const { url, method, headers } = req;
-  res.setHeader("Content-Type", "text/html");
-  res.write(
-    "<html><head><title>Toplearn NODE.js</title></head><body><h1>Starting...</h1></body></html>"
-  );
-  res.end();
+  if (url === "/") {
+    res.setHeader("Content-Type", "text/html");
+    res.write(
+      "<html><head><title>Toplearn NODE.js</title></head><body><h1>Home Page</h1><br><form action='/message' method='POST'><input name='message'><input type='submit'></form></body></html>"
+    );
+    res.end();
+  } else if (url === "/message" && method === "POST") {
+    const body = [];
+    req.on("data", (chunk) => {
+      body.push(chunk);
+    });
+    req.on("end", () => {
+      const parsedBody = Buffer.concat(body).toString();
+      const message = parsedBody.split("=")[1];
+      fs.writeFileSync("messages.txt", message);
+    });
+
+    res.write(
+      "<html><head><title>Toplearn NODE.js</title></head><body><h1>Message...</h1></body></html>"
+    );
+    res.end();
+  } else {
+    res.write(
+      "<html><head><title>Toplearn NODE.js</title></head><body><h1>Not Found!!!!!!</h1></body></html>"
+    );
+    res.end();
+  }
 });
 server.listen(4000);
