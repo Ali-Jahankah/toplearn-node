@@ -27,13 +27,10 @@ const server = http.createServer((req, res) => {
       const parsedBody = Buffer.concat(body).toString();
       const message = parsedBody.split("=")[1];
       fs.writeFileSync("messages.txt", message);
-      res.writeHead(302, { location: "/" });
     });
+    res.writeHead(302, { location: "/" });
 
-    res.write(
-      "<html><head><title>Toplearn NODE.js</title></head><body><h1>Message...</h1></body></html>"
-    );
-    res.end();
+    return res.end();
   } else {
     res.write(
       "<html><head><title>Toplearn NODE.js</title></head><body><h1>Not Found!!!!!!</h1></body></html>"
